@@ -1,14 +1,15 @@
 import "./App.css";
 import Form from "./components/Form";
 import TodoList from "./components/TodoList";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { sortedTodos } from "./redux/todoSlice";
 
 function App() {
   //State
-  const [inputText, setInputText] = useState("");
-  const [todos, setTodos] = useState([]);
-  const [status, setStatus] = useState("not-sorted");
-  const [filteredTodos, setFilteredTodos] = useState([]);
+  const dispatch = useDispatch();
+  const todos = useSelector((state) => state.todos);
+  const status = useSelector((state) => state.status);
   //Use Effect
 
   useEffect(() => {
@@ -16,37 +17,19 @@ function App() {
   }, [todos, status]);
   //Filter Handler
   const filterHandler = () => {
-    switch (status) {
-      case "asc":
-        const asorted = todos.sort((a, b) => a.date - b.date);
-        setFilteredTodos(asorted);
-        break;
-      case "desc":
-        const bsorted = todos.sort((a, b) => b.date - a.date);
-        setFilteredTodos(bsorted);
-        break;
-      default:
-        setFilteredTodos(todos);
-        break;
-    }
+    dispatch(
+      sortedTodos({
+        value: status,
+      })
+    );
   };
   return (
     <div className="App">
       <header>
         <h1>Список справ Оlek</h1>
       </header>
-      <Form
-        todos={todos}
-        setTodos={setTodos}
-        setInputText={setInputText}
-        inputText={inputText}
-        setStatus={setStatus}
-      />
-      <TodoList
-        filteredTodos={filteredTodos}
-        todos={todos}
-        setTodos={setTodos}
-      />
+      <Form />
+      <TodoList />
     </div>
   );
 }
