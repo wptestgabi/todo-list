@@ -1,19 +1,13 @@
-const Todo = ({ text, todo, todos, setTodos }) => {
+import { useDispatch } from "react-redux";
+import { toggleComplete, deleteTodo } from "../redux/todoSlice";
+
+const Todo = ({ id, completed, text, todo }) => {
+  const dispatch = useDispatch();
   const deleteHandler = () => {
-    setTodos(todos.filter((el) => el.id !== todo.id));
+    dispatch(deleteTodo({ id: id }));
   };
   const completeHandler = () => {
-    setTodos(
-      todos.map((item) => {
-        if (item.id === todo.id) {
-          return {
-            ...item,
-            completed: !item.completed,
-          };
-        }
-        return item;
-      })
-    );
+    dispatch(toggleComplete({ id: id, completed: !completed }));
   };
 
   return (
