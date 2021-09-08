@@ -1,24 +1,32 @@
-const Form = ({ inputText, setInputText, setTodos, todos, setStatus }) => {
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTodo } from "../redux/todoSlice";
+import { changeStatus } from "../redux/statusSlice";
+
+const Form = () => {
+  const [inputText, setInputText] = useState("");
+  const dispatch = useDispatch();
+
   const inputTextHandler = (e) => {
     setInputText(e.target.value);
   };
+
   const submitTodoHandler = (e) => {
-    const today = new Date();
     e.preventDefault();
-    setTodos([
-      ...todos,
-      {
+    dispatch(
+      addTodo({
         text: inputText,
-        completed: false,
-        date: today.getTime(),
-        id: Math.random() * 1000,
-      },
-    ]);
+      })
+    );
+
     setInputText("");
   };
   const statusHandler = (e) => {
-    console.log(e.target.value);
-    setStatus(e.target.value);
+    dispatch(
+      changeStatus({
+        value: e.target.value,
+      })
+    );
   };
 
   return (
